@@ -3,32 +3,29 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Bonus20 {
-	String universalVariable = "Hello World";	
 	static HashMap<String, Double> inventory = new HashMap<>();		
 	
 	public static void main(String[] args) {				
 		
 		Scanner scnr = new Scanner(System.in);
-		ArrayList<String> shoppingCart = new ArrayList<String>();
-		boolean shouldContinue = true;
+		ArrayList<String> shoppingCart = new ArrayList<String>();		
 		
-		// key is item as a String and value is price as a double		
-		// Fills the inventory
+		// First we must create and fill out an inventory of available items in our little market
 		inventory = fillInventory(inventory);				
-				
-		//scanner, inventory, prompt
-		// Could return a String, then add to ShoppingCart
-		
+	
+		boolean shouldContinue = true;
+		// This loop will run as long as the user wishes to do so
 		while (shouldContinue == true) {
-			// Display inventory ();
+			// Now displaying the created inventory so the user has choices
 			displayInventory(inventory);
 			
 			String prompt = "What would you like to order? ";
+			// Calling method enterItem so user can 
 			String newItem = enterItem(scnr, inventory, prompt);
 			
 			//If newItem is null, we need to skip one loop
 			if (newItem == null) {				
-				continue;
+				continue; 
 			}
 			
 			shoppingCart.add(newItem);
@@ -39,32 +36,34 @@ public class Bonus20 {
 				System.out.println("This is your cart");
 				System.out.println(shoppingCart);
 				
-				// average(); this displays average price of all items
+				// This displays average price of all items
 				average(shoppingCart);
-				//highest (); this displays highest price item
+				// This displays the  most expensive item
 				highest(shoppingCart);
-				//lowest (); this displays lowest price item
+				// This displays the cheapest item
 				lowest(shoppingCart);
-				//eventually break loop to end program
+				
+				shouldContinue = false;
 			}
-		}			
+		}	
+		System.out.println("Thanks for buying at 'Ye Olde Store'");		
 	}
 
 	private static void lowest(ArrayList<String> shoppingCart) {
-		double min = 0;
+		double min = 9999;
 		String leastExpensiveItem = "";
 		
 		for (String cartItem : shoppingCart) {
-			// sum get from the inventory,
-			// the value of the key in this case fruit
+			// Storing cartItem value inside of double variable 'cost'
 			double cost = inventory.get(cartItem);
+			// Determining that as long as the cost is less than the minimum, we keep storing until there are no more values
 			if (cost < min) {
 				min = cost;
 				leastExpensiveItem = cartItem;
 			}				
 		}
 		
-		System.out.println("The least expensive item is " + leastExpensiveItem);			
+		System.out.println("The least expensive item is " + leastExpensiveItem + ".");			
 	}
 
 	private static void highest(ArrayList<String> shoppingCart) {		
@@ -72,31 +71,31 @@ public class Bonus20 {
 		String mostExpensiveItem = "";
 		
 		for (String cartItem : shoppingCart) {
-			// sum get from the inventory,
-			// the value of the key in this case fruit
+			// Storing cartItem value inside of double variable 'cost'
 			double cost = inventory.get(cartItem);
+			// Determining that as long as the cost is more than the maximum,  we keep storing until there are no more values
 			if (cost > max) {
 				max = cost;
 				mostExpensiveItem = cartItem;
 			}				
 		}
 		
-		System.out.println("The most expensive item is " + mostExpensiveItem);		
+		System.out.println("The most expensive item is " + mostExpensiveItem + ".");		
 	}
 
 	private static void average(ArrayList<String> shoppingCart) {
 		
-		double sum = 0; // the double price		
-		double count = 0; // the number of individual items 
+		double sum = 0; // Price variable needs to be a double to print out cents.	
+		double count = 0; 
 		for (String cartItem : shoppingCart) {
-			// sum get from the inventory,
-			// the value of the key in this case fruit
+
 			double cost = inventory.get(cartItem);
-			sum += cost;
-			count++;			
+			// Storing the addition of each item inside sum
+			sum += cost; 
+			count++; // To count each item.			
 		}
 		
-		System.out.println("Average price per item in order was " + sum/count);
+		System.out.println("Average price per item in order was $" + sum/count);
 	}
 
 	private static String enterItem(Scanner scnr, HashMap<String, Double> inventory, String prompt) {
@@ -105,11 +104,12 @@ public class Bonus20 {
 		System.out.println(prompt);		
 		userInput = scnr.nextLine();
 		
-		//if userInout is in our inventory, then return userInput
-		if (inventory.containsKey(userInput) == true) { // true is redundant 
+		// If userInput is in our inventory, then return userInput
+		if (inventory.containsKey(userInput)) {
+			// Storing the cost (value called with key) from inventory in a variable for legibility
 			Double cost = inventory.get(userInput);
 			System.out.println("Adding " + userInput + " to cart at $" + cost); 			
-			// else, repeat the method
+			// Else, if userInput is not in the inventory, display error message and return null (so we can return to the loop
 		} else {
 			System.out.println("Sorry, we don't have those. Please try again.");	
 			userInput = null;
@@ -118,29 +118,35 @@ public class Bonus20 {
 	}		
 
 	private static void displayInventory(HashMap<String, Double> inventory) {
-		// we want to use a for loop!
-		String format = "%s\t\t%s";
-		String format2 = "%-10s     %s";
+		
+		String format = "%s\t\t\t\t%s";
+		String format2 = "%-20s             %s";
+		System.out.println("~~~~~~~Welcome to 'Ye Olde Store'~~~~~~\nThis is our available produce for today:");
+		System.out.println("=====================================");
 		System.out.printf(format, "Item" , "Price");
 		System.out.println();
-		System.out.println("===========================");
+		System.out.println("=====================================");
 		
-		
-		//loop through our inventory, by key (which is the list of fruits
-		for (String fruit : inventory.keySet() ) {
-			// this line prints out for each individual fruit
-			System.out.printf(format2,  fruit, inventory.get(fruit) + "\n");
-//			System.out.println(fruit + " " + inventory.get(fruit));
+		// This will loop through our inventory by key (list of available produce)
+		for (String cartItem : inventory.keySet() ) {
+			// This line prints out for each individual item
+			System.out.printf(format2,  cartItem, inventory.get(cartItem) + "\n");
 		}
 	}
 	
-	private static HashMap<String, Double> fillInventory(HashMap<String, Double> inventory) {		
+	private static HashMap<String, Double> fillInventory(HashMap<String, Double> inventory) {
+		// This fills out the inventory hashmap collection
+		
 		inventory.put("apple", 0.99);
 		inventory.put("banana", 0.59);
 		inventory.put("cauliflower", 1.59);
 		inventory.put("dragonfruit", 2.19);
 		inventory.put("figs", 2.09);
 		inventory.put("grapefruit", 1.99);				
+		inventory.put("horseradish", 1.79);	
+		inventory.put("ginger", 1.15);
+		inventory.put("tomatoes", 2.39);
+		inventory.put("spinach", .89);
 		
 		return inventory;
 	}
